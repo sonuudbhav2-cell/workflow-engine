@@ -1,0 +1,30 @@
+{
+  "dagId": "daily-sales-etl",
+  "schedule": "0 2 * * *",
+  "tasks": [
+    {
+      "taskId": "extract",
+      "type": "SHELL",
+      "command": "extract_sales.sh",
+      "dependsOn": []
+    },
+    {
+      "taskId": "validate",
+      "type": "SHELL",
+      "command": "validate_data.sh",
+      "dependsOn": ["extract"]
+    },
+    {
+      "taskId": "transform",
+      "type": "SHELL",
+      "command": "transform_data.sh",
+      "dependsOn": ["validate"]
+    },
+    {
+      "taskId": "load_warehouse",
+      "type": "HTTP",
+      "url": "http://warehouse-service/load",
+      "dependsOn": ["transform"]
+    }
+  ]
+}
